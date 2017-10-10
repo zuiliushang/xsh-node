@@ -9,11 +9,11 @@ class Heros extends React.Component {
     render(){
         const HEROS = this.props.HEROS;
         console.log(HEROS);
-        const lis =  HEROS.forEach((v,k)=>{
+        const lis =  HEROS.map((v,k)=>
             <li key={k.toString()}>
                 {v.name} : {v.age}
             </li>
-        });
+        );
         return (
             <ul>
                 {lis}
