@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+/*ReactDOM.render(<App />, document.getElementById('root'));
 function formatName(user){
     return user.firstname + " " + user.secondname;
 }
@@ -12,7 +12,7 @@ function formatName(user){
 const user = {
     firstname: 'ra',
     secondname: 'rsc'
-}
+}*/
 /*
 function getGreeting(user){
     if(user){
@@ -895,8 +895,539 @@ ReactDOM.render(
     document.getElementById('root')
 );
 */
+/*
+class ProductCategoryRow extends React.Component {
+    render(){
+        const category = this.props.category;
+        return (
+            <tr>
+                <th colSpan="2">
+                    {category}
+                </th>
+            </tr>
+        );
+    }
+}
+
+class ProductRow extends React.Component {
+    render() {
+        const product = this.props.product;
+        const name = product.stocked ?
+            product.name :
+            <span style={{color: 'red'}}>
+                {product.name}
+            </span>
+        return (
+            <tr>
+                <td>{name}</td>
+                <td>{product.price}</td>
+            </tr>
+        );
+    }
+}
+
+class ProductTable extends React.Component {
+    render() {
+        const rows = [];
+        let lastCategory = null;
+
+        this.props.products.forEach((product)=>{
+           if (product.category !== lastCategory){
+               rows.push(
+                   <ProductCategoryRow
+                     category={product.category}
+                        key={product.category}/>
+               );
+           }
+           rows.push(
+               <ProductRow
+                    product={product}
+                    key={product.name}/>);
+           lastCategory = product.category;
+        });
+        return (
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>{rows}</tbody>
+            </table>
+        );
+    }
+}
+
+class SearchBar extends React.Component {
+    render(){
+        return (
+            <form>
+                <input type="text" placeholder="search..."/>
+                <p>
+                    <input type="checkbox"/>
+                    {' '}
+                    Only show products in stock
+                </p>
+            </form>
+        );
+    }
+}
+
+class FilterableProductTable extends React.Component {
+    render() {
+        return(<div>
+            <SearchBar/>
+            <ProductTable products={this.props.products}/>
+        </div>
+        )
+    }
+}
+
+const PRODUCTS = [
+    {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
+    {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
+    {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
+    {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
+    {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
+    {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
+];
+
+ReactDOM.render(
+    <FilterableProductTable products={PRODUCTS} />,
+    document.getElementById('root')
+);*/
+/*
+
+class ChooseProductDialog extends React.Component {
+    constructor (props){
+        super(props);
+        this.state= {
+            keyword: '',
+            showStocked: false
+        };
+        this.handleKeywordChange = this.handleKeywordChange.bind(this);
+        this.handleShowStockedChange = this.handleShowStockedChange.bind(this);
+    }
+    handleKeywordChange(keyword){
+        this.setState({
+           keyword: keyword
+        });
+    }
+    handleShowStockedChange(showStocked){
+        this.setState({
+           showStocked: showStocked
+        });
+    }
+    render(){
+        return (
+            <div>
+                <SearchProductBox
+                    checked={this.state.showStocked}
+                    keyword={this.state.keyword}
+                    handleKeywordChange={this.handleKeywordChange}
+                    handleShowStockedChange={this.handleShowStockedChange}
+                />
+                <ProductBoxWrapper
+                    showStocked={this.state.showStocked}
+                    keyword={this.state.keyword}
+                    products={this.props.products}
+                />
+            </div>
+        );
+    }
+}
+
+class SearchProductBox extends React.Component {
+    constructor(props){
+        super (props);
+        this.handleInputOnChange = this.handleInputOnChange.bind(this);
+        this.handleCheckOnChange = this.handleCheckOnChange.bind(this);
+    }
+    handleInputOnChange(e){
+        this.props.handleKeywordChange(e.target.value);
+    }
+    handleCheckOnChange(e){
+        this.props.handleShowStockedChange(e.target.checked);
+    }
+    render(){
+        const keyword = this.props.keyword;
+        const checked = this.props.checked;
+        return (
+            <div>
+                <div>
+                    <input type="text" value={keyword} onChange={this.handleInputOnChange}/>
+                </div>
+                <div>
+                    <input type="checkbox" checked={checked} onChange={this.handleCheckOnChange}/>
+                    Only show products in stock
+                </div>
+            </div>
+        );
+    }
+}
+
+class ProductBoxWrapper extends React.Component {
+    render(){
+        const showStocked = this.props.showStocked;
+        const keyword = this.props.keyword;
+        const rows=[];
+        const products = this.props.products;
+        let category = '';
+        products.forEach((product)=>{
+            if(product.name.indexOf(keyword)===-1){
+                return ;
+            }
+            if(showStocked === true && product.stocked === false){
+                return ;
+            }
+            if (product.category !== category){
+                rows.push(
+                    <CategoryBox
+                        category={product.category}
+                        key={product.category}
+                    />
+                );
+                category = product.category;
+            };
+            rows.push(
+                <ProductItem
+                    product={product}
+                    key={product.name}
+                />
+            );
+        });
+        return (
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {rows}
+                </tbody>
+            </table>
+        )
+    }
+}
+
+class CategoryBox extends React.Component {
+    render(){
+        const category = this.props.category;
+        return (
+            <tr>
+                <td colSpan='2'>{category}</td>
+            </tr>
+        )
+    }
+}
+
+class ProductItem extends React.Component {
+    render(){
+        const product = this.props.product
+        const name = product.stocked ?
+            product.name :
+            <span style={{color: 'red'}}>
+                {product.name}
+            </span>
+        const price = product.price;
+        return (
+            <tr >
+                <td>{name}</td>
+                <td>{price}</td>
+            </tr>
+        );
+    }
+}
+
+
+const PRODUCTS = [
+    {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
+    {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
+    {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
+    {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
+    {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
+    {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
+];
+
+ReactDOM.render(
+    <ChooseProductDialog products={PRODUCTS}/>,
+    document.getElementById('root')
+);
+*/
+/*
+const components = {
+    photo: 1,
+    video: 2
+};
+
+function Story(props) {
+    // Correct! JSX type can be a capitalized variable.
+    const SpecificStory = components[props.storyType];
+    return <SpecificStory story={props.story} />;
+}
+
+ReactDOM.render(
+    <Story/>,
+    document.getElementById('root')
+);*/
+
+/*class Greeting extends React.Component {
+    render(){
+        return (
+            <h1>Hello , {this.props.name}</h1>
+        );
+    }
+
+}
+
+
+Greeting.defaultProps = {
+    name: 'Raindrops'
+};
+
+ReactDOM.render(
+    <Greeting/>,
+    document.getElementById('root')
+);*/
+
+/*class CustomTextInput extends React.Component {
+    constructor(props){
+        super(props);
+        this.focusTextInput = this.focusTextInput.bind(this);
+    }
+    focusTextInput(){
+        this.textInput.focus();
+    }
+    render(){
+        return(
+            <div>
+                <input
+                    type="text"
+                    ref={(input) => { this.textInput = input; }} />
+
+                <input
+                    type="button"
+                    value="Focus the text input"
+                    onClick={this.focusTextInput}
+                />
+            </div>
+        );
+    }
+}
+ReactDOM.render(
+    <CustomTextInput/>,
+    document.getElementById('root')
+);*/
+/*class NameForm extends React.Component {
+    constructor (props) {
+        super (props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    handleSubmit(event) {
+        alert('A name was submitted: ' + this.input.value);
+        event.preventDefault();
+    }
+    render() {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <label>
+                    name:
+                    <input type="text" defaultValue='bib' ref={(input) => this.input = input} />
+                </label>
+                <input type="submit" value='Submit' />
+            </form>
+        )
+    }
+}
+
+
+ReactDOM.render(
+    <NameForm/> ,
+    document.getElementById('root')
+);*/
+
+/*class CounterButton extends React.Component {
+    constructor (props) {
+        super (props);
+        this.state = {count: 1};
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.props.color !== nextProps.color) {
+            return true;
+        }
+        if (this.state.count !== nextState.count) {
+            return true;
+        }
+        return false;
+    }
+    render(){
+        return (
+            <button
+                color={this.props.color}
+                onClick={() => this.setState(state => ({count: state.count + 1}))}
+            >
+                Count: {this.state.count}
+            </button>
+        )
+    }
+}
+
+ReactDOM.render(
+    <CounterButton color='red'/>,
+    document.getElementById('root')
+);*/
+
+/*const appRoot = document.getElementById('root');
+const modalRoot = document.getElementById('modal-root');
+
+class Modal extends React.Component {
+    constructor(props){
+        super(props);
+        this.el = document.createElement('div');
+    }
+    componentDidMount(){
+        modalRoot.appendChild(this.el);
+    }
+    componentWillUnmount(){
+        modalRoot.removeChild(this.el);
+    }
+    render(){
+        return ReactDOM.createPortal(
+            this.props.children,
+            this.el,
+        );
+    }
+}
+
+class Parent extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {clicks: 0};
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(){
+        this.setState(prevState => ({
+            clicks: prevState.clicks + 1
+        }))
+    }
+    render(){
+        return (
+            <div onClick={this.handleClick}>
+                <p>Number of clicks: {this.state.clicks}</p>
+                <p>
+                    Open up the browser DevTools to obsetve that the button is not a child of
+                    the div with the onClick handle.
+                </p>
+                <Modal>
+                    <Child />
+                </Modal>
+            </div>
+        )
+    }
+}
+
+function Child(){
+    return (
+        <div className="modal">
+            <button>Click</button>
+        </div>
+    )
+}
+
+ReactDOM.render(<Parent/>, appRoot);*/
+
+class ErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { error: null, errorInfo: null };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        // Catch errors in any components below and re-render with error message
+        this.setState({
+            error: error,
+            errorInfo: errorInfo
+        })
+        // You can also log error messages to an error reporting service here
+    }
+
+    render() {
+        if (this.state.errorInfo) {
+            // Error path
+            return (
+                <div>
+                    <h2>Something went wrong.</h2>
+                    <details style={{ whiteSpace: 'pre-wrap' }}>
+                        {this.state.error && this.state.error.toString()}
+                        <br />
+                        {this.state.errorInfo.componentStack}
+                    </details>
+                </div>
+            );
+        }
+        // Normally, just render children
+        return this.props.children;
+    }
+}
+
+class BuggyCounter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { counter: 0 };
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick() {
+        this.setState(({counter}) => ({
+            counter: counter + 1
+        }));
+    }
+
+    render() {
+        if (this.state.counter === 5) {
+            // Simulate a JS error
+            throw new Error('I crashed!');
+        }
+        return <h1 onClick={this.handleClick}>{this.state.counter}</h1>;
+    }
+}
+
+function App2() {
+    return (
+        <div>
+            <p>
+                <b>
+                    This is an example of error boundaries in React 16.
+                    <br /><br />
+                    Click on the numbers to increase the counters.
+                    <br />
+                    The counter is programmed to throw when it reaches 5. This simulates a JavaScript error in a component.
+                </b>
+            </p>
+            <hr />
+            <ErrorBoundary>
+                <p>These two counters are inside the same error boundary. If one crashes, the error boundary will replace both of them.</p>
+                <BuggyCounter />
+                <BuggyCounter />
+            </ErrorBoundary>
+            <hr />
+            <p>These two counters are each inside of their own error boundary. So if one crashes, the other is not affected.</p>
+            <ErrorBoundary><BuggyCounter /></ErrorBoundary>
+            <ErrorBoundary><BuggyCounter /></ErrorBoundary>
+        </div>
+    );
+}
 
 
 
+ReactDOM.render(
+    <App2 />,
+    document.getElementById('root')
+);
 
 registerServiceWorker();
