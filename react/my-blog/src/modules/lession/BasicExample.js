@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React from 'react';
 import About from '../About';
 import Home from '../Home';
 import Topics from '../Topics';

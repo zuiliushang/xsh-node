@@ -1,12 +1,12 @@
-import React,{ Component } from 'react';
+import React from 'react';
 import {BrowserRouter as Router, Link, Route} from 'react-router-dom';
 import Home from '../Home';
 import About from '../About'
 const CustomLinkExample = () => (
     <Router>
         <div>
-            <OldSchoolMenuLink activeOnlyWhenExact={true} to="/" label="Home"/>
-            <OldSchoolMenuLink to="/about" label="About"/>
+            <OldSchoolMenuLink2 activeOnlyWhenExact={true} to="/" label="Home"/>
+            <OldSchoolMenuLink2 to="/about" label="About"/>
             <hr/>
             <Route exact path="/" component={Home}/>
             <Route path="/about" component={About} />
@@ -29,8 +29,17 @@ class OldSchoolMenuLink2 extends React.Component {
         super(props);
     }
     render() {
+        const to = this.props.to;
+        const activeOnlyWhenExact = this.props.activeOnlyWhenExact;
+        const label = this.props.label;
         return (
-            <div></div>
+            <Route
+                path = {to} exact={activeOnlyWhenExact} children={({ match }) => (
+                <div className={match ? 'active':''}>
+                    {match ? '>' : ''}<Link to={to}>{label}</Link>
+                </div>
+            )}
+            />
         )
     }
 }
