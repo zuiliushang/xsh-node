@@ -16,6 +16,8 @@ import AnimationExample from './modules/lession/AnimationExample';
 import AmbiguousExample from './modules/lession/AmbiguousExample';
 import RouteConfigExample from './modules/lession/RouteConfigExample';
 import ModalGallery from './modules/lession/ModalSwitch';
+import StaticRouterExample from './modules/lession/StaticRouterExample';
+
 
 const Lession = () => (
     <Router>
@@ -39,7 +41,7 @@ const Lession = () => (
 
 
 ReactDOM.render(
-    <ModalGallery/>,
+    <StaticRouterExample/>,
     document.getElementById('root')
 );
 registerServiceWorker();
